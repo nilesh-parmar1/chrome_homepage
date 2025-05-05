@@ -482,17 +482,29 @@ renderTodos();
 function redirectToChatGPT() {
     const prompt = document.getElementById('promptInput').value.trim();
     if (prompt) {
-      navigator.clipboard.writeText(prompt).then(() => {
-        window.open("https://chat.openai.com/chat", "_blank");
-      });
+        // Use the ChatGPT URL pattern that includes the prompt
+        // Note: ChatGPT doesn't have an official way to directly pre-fill prompts via URL
+        // but we can open it with the prompt as a URL parameter that may work in some scenarios
+        const chatGptUrl = `https://chat.openai.com/?q=${encodeURIComponent(prompt)}`;
+        
+        // Also copy to clipboard as a backup
+        navigator.clipboard.writeText(prompt).then(() => {
+            // Open ChatGPT in a new tab
+            window.open(chatGptUrl, "_blank");
+            
+        }).catch(err => {
+            // If clipboard access fails, just open ChatGPT
+            window.open(chatGptUrl, "_blank");
+            alert("Opening ChatGPT! You may need to paste your prompt manually.");
+        });
     }
-  }
-  
-  // Add Enter key functionality
-  document.getElementById('promptInput').addEventListener('keypress', function(event) {
+}
+
+// Add Enter key functionality
+document.getElementById('promptInput').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
-      event.preventDefault();
-      redirectToChatGPT();
+        event.preventDefault();
+        redirectToChatGPT();
     }
-  });
+});
 
